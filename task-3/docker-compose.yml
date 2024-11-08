@@ -1,0 +1,8 @@
+version: '3'
+services:
+  reactapp:
+    image: mostafiz51/mostafiz-tech-blog
+    container_name: reactapp
+    ports:
+      - "9090:5000"   # Expose port 5000 inside container to 9090 on the host
+    restart: always

@@ -1,0 +1,48 @@
+version: '3.7'
+
+services:
+  # MySQL service
+  mysql:
+    image: mysql:5.7
+    container_name: mysql_container
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password         # Set the root password for MySQL
+      MYSQL_DATABASE: wordpress_db              # Create a WordPress database
+      MYSQL_USER: wordpress_user                # WordPress MySQL username
+      MYSQL_PASSWORD: wordpress_password        # WordPress MySQL password
+    volumes:
+      - mysql_data:/var/lib/mysql               # Named volume for data persistence
+    networks:
+      - wordpress_network
+    restart: always
+
+  # WordPress service
+  wordpress:
+    image: wordpress:latest
+    container_name: wordpress_container
+    depends_on:
+      - mysql  # Ensure WordPress starts after MySQL
+    ports:
+      - "8080:80"  # Expose WordPress on port 8080
+    environment:
+      WORDPRESS_DB_HOST: mysql:3306              # Point WordPress to MySQL service
+      WORDPRESS_DB_NAME: wordpress_db            # Database name
+      WORDPRESS_DB_USER: wordpress_user          # MySQL username
+      WORDPRESS_DB_PASSWORD: wordpress_password  # MySQL password
+    volumes:
+      - wordpress_data:/var/www/html             # Volume for WordPress data
+    networks:
+      - wordpress_network
+    restart: always
+
+# Named volumes for data persistence
+volumes:
+  mysql_data:
+    driver: local
+  wordpress_data:
+    driver: local
+
+# Networks for communication between services
+networks:
+  wordpress_network:
+    driver: bridge

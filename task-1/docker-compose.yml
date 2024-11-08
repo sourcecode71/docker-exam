@@ -1,0 +1,7 @@
+version: '3'
+services:
+  nginx:
+    build: .
+    container_name: task-1-nginx
+    ports:
+      - "9090:80"  # Expose port 9090 on the host to port 80 in the container
